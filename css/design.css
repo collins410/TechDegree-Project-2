@@ -100,11 +100,11 @@ body{
   text-align: center;
 }
  
-  .pagination li{
+  .pagination ul li{
     display: inline;
   }
 
-    .pagination li a{
+    .pagination ul li a{
       border: 1px solid #eaeaea;
       border-radius: 5px;
       padding: 3px 8px;
@@ -112,8 +112,9 @@ body{
       color: #4ba6c3;
     }
 
-    .pagination li a.active,
-    .pagination li a:hover{
+    .pagination ul li a.active,
+    .pagination ul li a:hover,
+    .active{
       background-color: #4ba6c3;
       color: #fff;
     }

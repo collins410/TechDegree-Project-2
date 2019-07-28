@@ -39,8 +39,8 @@ function showPage (array, page) {
 //Handle the click event corresponding to the page number links
 //Removes the "active" class name from all page  numbers then adds the
 // active class to the clicked page number
-function eventHandler(event){
-  let page = parseInt(this.textContent);
+function eventHandler(){
+  let int = parseInt(this.textContent);
   let pages = this.parentNode.childNodes;
   for(i = 0; i < pages.length; i++){
     pages[i].classList.remove('active');
@@ -48,10 +48,10 @@ function eventHandler(event){
   this.setAttribute('class', 'active');
   if(newStudentArray.length > 0){
     removeContent();
-    showPage(newStudentArray, page);
+    showPage(newStudentArray, int);
   } else {
     removeContent();
-    showPage(studentList, page);
+    showPage(studentList, int);
   }
 }
 
