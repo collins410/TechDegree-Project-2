@@ -1,31 +1,37 @@
 // Project 2
 // List filter and pagination
-   
+
 // Declare global variables
-let studentList = document.querySelectorAll('li');
+const studentList = document.querySelectorAll('li');
 const itemsPerPage = 10;
+let noSearchValue = false;
 let pageNumber = Math.ceil(studentList.length/itemsPerPage);
-let counter = 0;
+let newStudentArray = [];
 
 // Change the display status of all students to hide them on the page
 function removeContent (){
   for(i = 0; i < studentList.length; i++){
     studentList[i].style.display = "none";
   }
+  if(noSearchValue) {
+    let noSearchResults = document.getElementById("no_results");
+    noSearchResults.parentNode.removeChild(noSearchResults);
+    noSearchValue = false;
+  }
 }
 
 // Show the specified number of students per page
-function showPage (array, page){
-  let startIndex = (itemsPerPage*page) - itemsPerPage;
-  let endIndex = itemsPerPage*page;
-  if((array.length/itemsPerPage) < page){
-    let endIndex = ((page*itemsPerPage)-((1-((array.length/itemsPerPage)-Math.floor(array.length/itemsPerPage)))*10));
+function showPage (array, page) {
+  let startIndex = (itemsPerPage * page) - itemsPerPage;
+  let endIndex = itemsPerPage * page;
+  if (((array.length / itemsPerPage) < page) && ((array.length / itemsPerPage) > 0)) {
+    let endIndex = ((page * itemsPerPage) - ((1 - ((array.length / itemsPerPage) - Math.floor(array.length / itemsPerPage))) * 10));
     for (let i = startIndex; i < endIndex; i++) {
       array[i].style.display = "block";
     }
-  }else{
+  } else {
     for (let i = startIndex; i < endIndex; i++) {
-    array[i].style.display = "block";
+      studentList[i].style.display = "block";
     }
   }
 }
@@ -37,11 +43,16 @@ function eventHandler(event){
   let page = parseInt(this.textContent);
   let pages = this.parentNode.childNodes;
   for(i = 0; i < pages.length; i++){
-   pages[i].classList.remove('active');
+    pages[i].classList.remove('active');
   }
   this.setAttribute('class', 'active');
-  removeContent();
-  showPage(studentList, page);
+  if(newStudentArray.length > 0){
+    removeContent();
+    showPage(newStudentArray, page);
+  } else {
+    removeContent();
+    showPage(studentList, page);
+  }
 }
 
 // Add links after the list of students and incorporate formatting from css
@@ -69,6 +80,15 @@ function appendPageLinks(num){
   }
 }
 
+function removePageLinks (){
+  let li = document.getElementsByClassName('pagination').item(0).firstChild;
+  //remove the page numbers at the bottom of the page
+  li = li.childNodes;
+  for(i = 0; i < li.length; i ++){
+    li[i].style.display = "none";
+  }
+}
+
 //Add search function
 function addSearchBox(){
   let location = document.getElementsByClassName('cf').item(0);
@@ -89,41 +109,43 @@ function addSearchBox(){
 
 // Uses the input from the search box to display the corresponding students
 function search () {
+  removePageLinks();
+  newStudentArray.length = 0;
+  let field = document.getElementById('search-field');
+  let input = field.value;
   let students = document.querySelectorAll('h3');
-  let li = document.getElementsByClassName('pagination').item(0).firstChild;
-  let array = [];
   for (let i = 0; i < students.length; i++) {
-    let field = document.getElementById('search-field');
-    let input = field.value;
     let studentName = students[i];
     let text = studentName.innerText;
-    if (text.includes(input)) {
-      studentList[i].style.display = "block";
-      array.push(studentList[i]);
-    } else {
-      studentList[i].style.display = "none";
+    if (text.includes(input) && (input.length > 0)) {
+      newStudentArray.push(studentList[i]);
     }
   }
-  if (array.length === 0) {
+  // If there are no search results call the noResults function
+  if ((newStudentArray.length < 1) && (input.length > 0)) {
+    removeContent();
     noResults();
+  } else if (input.length === 0){
+    removeContent();
+    showPage(studentList, 1);
+    appendPageLinks(pageNumber);
+  }else{
+    removeContent();
+    appendPageLinks(Math.ceil(newStudentArray.length/itemsPerPage));
+    showPage(newStudentArray, 1);
   }
-  li = li.childNodes;
-  for(i = 0; i < li.length; i ++){
-    li[i].style.display = "none";
-  }
-  appendPageLinks(array.length/itemsPerPage);
 }
 
 function noResults(){
   let location = document.getElementsByClassName('student-list').item(0);
   let h1 =  document.createElement('h1');
   h1.setAttribute('align', 'center');
+  h1.setAttribute('id', 'no_results');
   h1.style.fontSize = "200%";
-  if (counter < 1){
-    counter += 1;
+  if (!noSearchValue){
+    noSearchValue = true;
     h1.innerHTML = "No Search Results";
     location.appendChild(h1);
-    console.log(length, 'length in loop')
   }
 }
 
