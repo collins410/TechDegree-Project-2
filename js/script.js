@@ -7,6 +7,7 @@ const itemsPerPage = 10;
 let noSearchValue = false;
 let pageNumber = Math.ceil(studentList.length/itemsPerPage);
 let newStudentArray = [];
+let firstPageLoad = true;
 
 // Change the display status of all students to hide them on the page
 function removeContent (){
@@ -43,9 +44,9 @@ function eventHandler(){
   let int = parseInt(this.textContent);
   let pages = this.parentNode.childNodes;
   for(i = 0; i < pages.length; i++){
-    pages[i].classList.remove('active');
+    pages[i].firstChild.className = '';
   }
-  this.setAttribute('class', 'active');
+  this.firstChild.setAttribute('class', 'active');
   if(newStudentArray.length > 0){
     removeContent();
     showPage(newStudentArray, int);
@@ -59,12 +60,12 @@ function eventHandler(){
 // Add functionality to the links to change the students displayed on the page to correspond
 // to the page clicked on
 function appendPageLinks(num){
-  let div = document.createElement('div');
+  let nav = document.createElement('nav');
   let ul = document.createElement('ul');
-  document.getElementsByClassName('page').item(0).appendChild(div);
-  div.appendChild(ul);
-  div.setAttribute('id', 'pages');
-  div.setAttribute('class', 'pagination');
+  document.getElementsByClassName('page').item(0).appendChild(nav);
+  nav.appendChild(ul);
+  nav.setAttribute('id', 'pages');
+  nav.setAttribute('class', 'pagination');
   for (i = 1; i < num+1; i++) {
     let page = i;
     let a = document.createElement("a");
@@ -77,7 +78,11 @@ function appendPageLinks(num){
     let pageLoc = document.getElementById('pages').firstChild;
     pageLoc.appendChild(li);
     li.addEventListener("click", eventHandler)
+    if((firstPageLoad) && (i === 1)){
+      a.setAttribute('class', 'active');
+    }
   }
+  firstPageLoad = false;
 }
 
 function removePageLinks (){
