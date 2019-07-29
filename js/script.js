@@ -60,12 +60,12 @@ function eventHandler(){
 // Add functionality to the links to change the students displayed on the page to correspond
 // to the page clicked on
 function appendPageLinks(num){
-  let nav = document.createElement('nav');
+  let div = document.createElement('div');
   let ul = document.createElement('ul');
-  document.getElementsByClassName('page').item(0).appendChild(nav);
-  nav.appendChild(ul);
-  nav.setAttribute('id', 'pages');
-  nav.setAttribute('class', 'pagination');
+  document.getElementsByClassName('page').item(0).appendChild(div);
+  div.appendChild(ul);
+  div.setAttribute('id', 'pages');
+  div.setAttribute('class', 'pagination');
   for (i = 1; i < num+1; i++) {
     let page = i;
     let a = document.createElement("a");
